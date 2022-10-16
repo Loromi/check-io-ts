@@ -1,23 +1,26 @@
 // import assert from "assert";
 
 function unixMatch(filename: string, pattern: string): boolean {
-    let lenFile: number = filename.length;
-    let lenPtrn: number = pattern.length;
-
-    while (lenFile > 0) {
-        lenFile--;
-        lenPtrn = pattern.length;
-        while (lenPtrn > 0) {
-            lenPtrn--;
-            if (pattern.charAt(lenPtrn) === filename.charAt(lenFile)) {
-                return true;
+    let ptrnValues: string[] = pattern.split('[')[1].split(']')[0].split('');
+    console.log(`ptrnValues(${pattern}) = ${ptrnValues}`);
+    for (let i = 0; i < filename.length; i++) {
+        while (pattern[i] === "*" || pattern[i] === "?" || pattern[i] === filename[i]) {
+            i++;
+        }
+        if (pattern[i] === "[" && pattern[i + 1] !== "!") {
+            if (ptrnValues.indexOf(filename[i]) === -1) {
+                return false;
+            }
+        } else if (pattern[i] === "[" && pattern[i + 1] === "!") {
+            if (ptrnValues.indexOf(filename[i]) !== -1) {
+                return false;
             }
         }
     }
-    return false;
+    return true;
 }
 
-console.log("false = ", unixMatch('log1.txt', 'log[234567890].txt'));
+console.log("false = ", unixMatch('log1.txt', '[234567890]'));
 console.log("true = ", unixMatch('log1.txt', 'log[1234567890].txt'));
 console.log("true = ", unixMatch('log1.txt', 'log[!0].txt'));
 console.log("false = ", unixMatch('log1.txt', 'log[!1].txt'));
