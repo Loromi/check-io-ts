@@ -1,16 +1,24 @@
 // import assert from "assert";
 
 function unixMatch(filename: string, pattern: string): boolean {
-    let ptrnValues: string[] = pattern.split('[')[1].split(']')[0].split('');
-    let ptrnBgn: string = pattern.split('[')[0];
-    let ptrnEnd: string = pattern.split(']')[1];
-    let fileBgn: string = filename.slice(0, ptrnBgn.length);
-    let fileEnd: string = filename.slice(filename.length - ptrnEnd.length, filename.length);
-    let fileMid: string = filename.slice(ptrnBgn.length, filename.length - ptrnEnd.length);
+    let ptrnValues: string[];
+    let ptrnBgn: string;
+    let ptrnEnd: string;
+    let fileBgn: string;
+    let fileEnd: string;
+    let fileMid: string;
 
-    if (pattern.indexOf('[') === -1) {
+    if (pattern.indexOf('[') !== -1) {
+        ptrnValues = pattern.split('[')[1].split(']')[0].split('');
+        ptrnBgn = pattern.split('[')[0];
+        ptrnEnd = pattern.split(']')[1];
+        fileBgn = filename.slice(0, ptrnBgn.length);
+        fileEnd = filename.slice(filename.length - ptrnEnd.length);
+        fileMid = filename.slice(ptrnBgn.length, filename.length - ptrnEnd.length);
+    } else {
         return (filename === pattern);
-    } else if (fileBgn !== ptrnBgn || fileEnd !== ptrnEnd) {
+    }
+    if (fileBgn !== ptrnBgn || fileEnd !== ptrnEnd) {
         return (false);
     }
     if (ptrnValues.indexOf(fileMid[0]) > -1) {
