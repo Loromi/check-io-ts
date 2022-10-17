@@ -2,26 +2,31 @@
 
 function unixMatch(filename: string, pattern: string): boolean {
     let ptrnValues: string[] = pattern.split('[')[1].split(']')[0].split('');
-    console.log(`ptrnValues(${pattern}) = ${ptrnValues}`);
+    let lenPtrn: number = ptrnValues.length, j: number = 0;
+    let seqMatch: boolean = false, ptrnMatch: boolean = true;
+
     for (let i = 0; i < filename.length; i++) {
-        while (pattern[i] === "*" || pattern[i] === "?" || pattern[i] === filename[i]) {
-            i++;
-        }
-        if (pattern[i] === "[" && pattern[i + 1] !== "!") {
-            if (ptrnValues.indexOf(filename[i]) === -1) {
-                return false;
+        while (pattern[i + j] === "*" || pattern[i + j] === "?" || pattern[i + j] === filename[i]) {
+            if (pattern[i + j] !== filename[i]) {
+                ptrnMatch = false;
             }
-        } else if (pattern[i] === "[" && pattern[i + 1] === "!") {
-            if (ptrnValues.indexOf(filename[i]) !== -1) {
-                return false;
+            if (pattern[i + j] === "[" && ptrnValues.indexOf(filename[i]) !== -1) {
+                if (pattern[i + 1] !== "!") {
+                    seqMatch = true;
+                } else {
+                    seqMatch = false;
+                }
+                j = lenPtrn;
             }
+        i++;
         }
     }
-    return true;
+    console.log(`seqMatch: ${seqMatch}, ptrnMatch: ${ptrnMatch}`);
+    return (seqMatch && ptrnMatch);
 }
 
-console.log("false = ", unixMatch('log1.txt', '[234567890]'));
-console.log("true = ", unixMatch('log1.txt', 'log[1234567890].txt'));
+console.log("true = ", unixMatch('log9.txt', '*[234567890]*'));
+console.log("true = ", unixMatch('log1.txt', 'log[234567890].txt'));
 console.log("true = ", unixMatch('log1.txt', 'log[!0].txt'));
 console.log("false = ", unixMatch('log1.txt', 'log[!1].txt'));
 
