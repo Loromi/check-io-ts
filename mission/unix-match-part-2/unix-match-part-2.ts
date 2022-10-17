@@ -8,13 +8,15 @@ function unixMatch(filename: string, pattern: string): boolean {
     let fileEnd: string = filename.slice(filename.length - ptrnEnd.length, filename.length);
     let fileMid: string = filename.slice(ptrnBgn.length, filename.length - ptrnEnd.length);
 
-    if (fileBgn != ptrnBgn || fileEnd != ptrnEnd) {
-        return false;
+    if (pattern.indexOf('[') === -1) {
+        return (filename === pattern);
+    } else if (fileBgn !== ptrnBgn || fileEnd !== ptrnEnd) {
+        return (false);
     }
     if (ptrnValues.indexOf(fileMid[0]) > -1) {
-        return (ptrnValues[0] != "!") ? true : false;
+        return (ptrnValues[0] != "!");
     } else {
-        return (ptrnValues[0] == "!") ? true : false;
+        return (ptrnValues[0] == "!");
     }
 }
 
