@@ -8,7 +8,7 @@ function unixMatch(filename: string, pattern: string): boolean {
     let fileEnd: string = filename.slice(filename.length - ptrnEnd.length, filename.length);
     let fileMid: string = filename.slice(ptrnBgn.length, filename.length - ptrnEnd.length);
 
-    if (fileBgn != ptrnBgn && fileEnd != ptrnEnd) {
+    if (fileBgn != ptrnBgn || fileEnd != ptrnEnd) {
         return false;
     }
     if (ptrnValues.indexOf(fileMid[0]) > -1) {
