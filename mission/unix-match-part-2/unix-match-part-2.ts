@@ -2,24 +2,16 @@
 
 function unixMatch(filename: string, pattern: string): boolean {
     let ptrnValues: string[] = pattern.split('[')[1].split(']')[0].split('');
+    let ptrnBgn: string = pattern.split('[')[0];
+    let ptrnEnd: string = pattern.split(']')[1];
+    let fileBgn: string = filename.slice(0, ptrnBgn.length);
+    let fileEnd: string = filename.slice(filename.length - ptrnEnd.length, filename.length);
+
     let lenPtrn: number = ptrnValues.length, j: number = 0;
     let seqMatch: boolean = false, ptrnMatch: boolean = true;
 
     for (let i = 0; i < filename.length; i++) {
-        while (pattern[i + j] === "*" || pattern[i + j] === "?" || pattern[i + j] === filename[i]) {
-            if (pattern[i + j] !== filename[i]) {
-                ptrnMatch = false;
-            }
-            if (pattern[i + j] === "[" && ptrnValues.indexOf(filename[i]) !== -1) {
-                if (pattern[i + 1] !== "!") {
-                    seqMatch = true;
-                } else {
-                    seqMatch = false;
-                }
-                j = lenPtrn;
-            }
-        i++;
-        }
+
     }
     console.log(`seqMatch: ${seqMatch}, ptrnMatch: ${ptrnMatch}`);
     return (seqMatch && ptrnMatch);
