@@ -8,17 +8,27 @@ function unixMatch(filename: string, pattern: string): boolean {
     let fileEnd: string;
     let fileMid: string;
 
-    if (pattern.indexOf('[') !== -1) {
+    if (pattern.indexOf('[') > 0) {
         ptrnValues = pattern.split('[')[1].split(']')[0].split('');
         ptrnBgn = pattern.split('[')[0];
         ptrnEnd = pattern.split(']')[1];
         fileBgn = filename.slice(0, ptrnBgn.length);
         fileEnd = filename.slice(filename.length - ptrnEnd.length);
         fileMid = filename.slice(ptrnBgn.length, filename.length - ptrnEnd.length);
+        if (fileBgn != ptrnBgn) {
+            return false;
+        } 
+    } else if (pattern.indexOf('[') === 0) {
+        ptrnValues = pattern.split('[')[1].split(']')[0].split('');
+        ptrnBgn = '';
+        ptrnEnd = pattern.split(']')[1];
+        fileBgn = '';
+        fileEnd = filename.slice(filename.length - ptrnEnd.length);
+        fileMid = String(filename[0]);
     } else {
-        return (filename === pattern);
+        return (filename == pattern);
     }
-    if (fileBgn !== ptrnBgn || fileEnd !== ptrnEnd) {
+    if (fileEnd != ptrnEnd) {
         return (false);
     }
     if (ptrnValues.indexOf(fileMid[0]) > -1) {
@@ -32,6 +42,9 @@ console.log("true = ", unixMatch('log9.txt', 'log[234567890].txt'));
 console.log("true = ", unixMatch('log1.txt', 'log[1234567890].txt'));
 console.log("true = ", unixMatch('log1.txt', 'log[!0].txt'));
 console.log("false = ", unixMatch('log1.txt', 'log[!1].txt'));
+console.log("false = ", unixMatch("name.txt","[!abc]name.txt"));
+console.log("true = ", unixMatch("Ename.txt","[!abc]name.txt"));
+console.log("false = ", unixMatch("aname.txt","[!abc]name.txt"));
 
 // These "asserts" are used for self-checking
 // assert.equal(unixMatch("log1.txt", "log[1234567890].txt"), true);
